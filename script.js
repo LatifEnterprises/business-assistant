@@ -1,4 +1,4 @@
-const API_KEY = "AQ.Ab8RN6JJfIAmbg0E8FRqV7ZPAM28Q0WpNeVknWM8Stnf4dS3sw";
+const API_KEY = "YOUR_NEW_KEY_HERE";
 
 const chatBox = document.getElementById("chatBox");
 
@@ -21,24 +21,38 @@ async function sendMessage() {
 
   addMessage("AI is thinking...", "ai");
 
-  const response = await fetch(
-    "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + API_KEY,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        contents: [
-          { parts: [{ text: userText }] }
-        ]
-      })
+  try {
+    const response = await fetch(
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + API_KEY,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [
+            {
+              parts: [{ text: userText }]
+            }
+          ]
+        })
+      }
+    );
+
+    const data = await response.json();
+
+    console.log("API RESPONSE:", data); // 👈 VERY IMPORTANT
+
+    if (data.error) {
+      addMessage("Error: " + data.error.message, "ai");
+      return;
     }
-  );
 
-  const data = await response.json();
+    const aiText =
+      data?.candidates?.[0]?.content?.parts?.[0]?.text ||
+      "No valid response from AI";
 
-  const aiText =
-    data?.candidates?.[0]?.content?.parts?.[0]?.text ||
-    "No response";
+    addMessage("AI: " + aiText, "ai");
 
-  addMessage("AI: " + aiText, "ai");
+  } catch (err) {
+    addMessage("Request failed: " + err.message, "ai");
+  }
 }
