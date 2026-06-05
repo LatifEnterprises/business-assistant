@@ -1,4 +1,4 @@
-const API_KEY = "YOUR_NEW_KEY_HERE";
+const API_KEY = "AQ.Ab8RN6JJfIAmbg0E8FRqV7ZPAM28Q0WpNeVknWM8Stnf4dS3sw";
 
 const chatBox = document.getElementById("chatBox");
 
